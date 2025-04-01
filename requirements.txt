@@ -1,0 +1,7 @@
+
+Flask==2.0.1
+pycryptodome==3.10.1
+requests==2.26.0
+scikit-learn==0.24.2
+beautifulsoup4==4.10.0
+
