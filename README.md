@@ -34,8 +34,26 @@ The project includes:
 
 The project is structured into several key modules:
 
-blockchain_project/ │── blockchain/ │ │── init.py │ │── blockchain.py # Blockchain logic (block creation and chain management) │ │── block.py # Block definition (stores transaction details) │ │── transaction.py # Transaction logic (structure of transaction data) │── api/ │ │── app.py # Flask application for handling API requests (add transaction, view blockchain) │── security/ │ │── key_generation.py # RSA key generation logic for encryption │── ml/ │ │── price_prediction.py # ML model for predicting product prices │ │── quality_assessment.py# ML model for assessing product quality │── data/ │ │── fetch_odop_data.py # Fetch and parse data from CFTRI ODOP website │ │── generate_synthetic_prices.py # Generate synthetic price data for products │── scripts/ │ │── integrate_ml_blockchain.py # Integrates ML models with the blockchain │── requirements.txt # Python dependencies │── README.md # Project documentation
-
+blockchain_project/
+│── blockchain/
+│   │── __init__.py
+│   │── blockchain.py        # Blockchain logic (block creation and chain management)
+│   │── block.py             # Block definition (stores transaction details)
+│   │── transaction.py       # Transaction logic (structure of transaction data)
+│── api/
+│   │── app.py               # Flask application for handling API requests (add transaction, view blockchain)
+│── security/
+│   │── key_generation.py    # RSA key generation logic for encryption
+│── ml/
+│   │── price_prediction.py  # ML model for predicting product prices
+│   │── quality_assessment.py# ML model for assessing product quality
+│── data/
+│   │── fetch_odop_data.py   # Fetch and parse data from CFTRI ODOP website
+│   │── generate_synthetic_prices.py  # Generate synthetic price data for products
+│── scripts/
+│   │── integrate_ml_blockchain.py  # Integrates ML models with the blockchain
+│── requirements.txt         # Python dependencies
+│── README.md                # Project documentation
 
 
 ### Key Files
