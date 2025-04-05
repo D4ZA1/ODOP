@@ -14,6 +14,7 @@ app = Flask(__name__)
 
 
 
+
 private_key, public_key = generate_keys()
 
 blockchain = Blockchain()
@@ -41,7 +42,6 @@ transactions = [
     Transaction(**tx, private_key=private_key).to_dict() for tx in sample_transactions
 ]
 blockchain.add_block(transactions, public_key)
-
 @app.route("/")
 def index():
     return jsonify({"message": "Test blockchain with dummy transactions is running."})
