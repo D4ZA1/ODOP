@@ -1,8 +1,9 @@
-
 from .block import Block
+from .transaction import Transaction
 
 
 class Blockchain:
+
 
     def __init__(self):
         self.chain = []
@@ -13,7 +14,6 @@ class Blockchain:
         self.chain.append(genesis_block)
 
     def add_block(self, transactions, public_key):
-        # Verify all transactions before adding
         for tx_data in transactions:
             transaction = Transaction(**tx_data)
             if not transaction.verify_transaction(public_key):

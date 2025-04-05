@@ -1,4 +1,3 @@
-
 import time
 
 from security.key_generation import sign_data, verify_signature
@@ -6,7 +5,10 @@ from security.key_generation import sign_data, verify_signature
 
 class Transaction:
 
-    def __init__(self, product, district, price, quality_score, private_key=None, timestamp=None, buyer=None, seller=None):
+
+
+    def __init__(self, product, district, price, quality_score,
+                 buyer=None, seller=None, private_key=None, timestamp=None, signature=None):
         self.product = product
         self.district = district
         self.price = price
@@ -14,10 +16,10 @@ class Transaction:
         self.timestamp = timestamp or time.time()
         self.buyer = buyer
         self.seller = seller
-        self.signature = None
-        
-        # Sign the transaction if private key is provided
-        if private_key:
+        self.signature = signature
+
+        # Only sign if there's a private key and no existing signature
+        if private_key and not self.signature:
             self.signature = self.sign_transaction(private_key)
 
     def to_dict(self):
@@ -33,15 +35,15 @@ class Transaction:
         }
 
     def sign_transaction(self, private_key):
-        transaction_data = self.product + self.district + str(self.price) + str(self.quality_score) + str(self.timestamp)
-        return sign_data(private_key, transaction_data)
+        data = f"{self.product}{self.district}{self.price}{self.quality_score}{self.buyer}{self.seller}{self.timestamp}"
+        return sign_data(private_key, data)
 
     def verify_transaction(self, public_key):
-        if self.signature is None:
+        if not self.signature:
             return False
-        transaction_data = self.product + self.district + str(self.price) + str(self.quality_score) + str(self.timestamp)
-        return verify_signature(public_key, transaction_data, bytes.fromhex(self.signature))
+        data = f"{self.product}{self.district}{self.price}{self.quality_score}{self.buyer}{self.seller}{self.timestamp}"
+        return verify_signature(public_key, data, bytes.fromhex(self.signature))
 
     def __str__(self):
-        return f"Transaction({self.product}, {self.district}, {self.price}, {self.quality_score}, {self.timestamp})"
+        return f"Transaction({self.product}, {self.district}, {self.price}, {self.quality_score}, {self.buyer}, {self.seller}, {self.timestamp})"
 
