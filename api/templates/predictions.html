@@ -1,0 +1,98 @@
+
+{% extends "layout.html" %}
+{% block content %}
+<div class="container mt-4">
+  <h2 class="mb-4">ML Forecast Results</h2>
+
+  <form method="post" class="mb-4">
+    <label for="forecast_date">Select Forecast Date:</label>
+    <input type="date" name="forecast_date" id="forecast_date" value="{{ forecast_date }}" class="form-control w-auto d-inline">
+    <button type="submit" class="btn btn-primary ms-2">Get Forecast</button>
+  </form>
+
+  {% for model in evaluation %}
+    <div class="card mb-4 shadow-sm">
+      <div class="card-body">
+        <h5 class="card-title">{{ model.File }}</h5>
+        {% if model.Error %}
+          <p class="text-danger">{{ model.Error }}</p>
+        {% else %}
+          <ul class="list-group mb-3">
+            <li class="list-group-item">MAE: {{ model.MAE or 'N/A' }}</li>
+            <li class="list-group-item">RMSE: {{ model.RMSE or 'N/A' }}</li>
+            <li class="list-group-item">R² Score: {{ model['R2 Score'] or 'N/A' }}</li>
+            <li class="list-group-item">Normalized MAE: {{ model['Normalized MAE Score'] or 'N/A' }}</li>
+            <li class="list-group-item">Normalized RMSE: {{ model['Normalized RMSE Score'] or 'N/A' }}</li>
+          </ul>
+        {% endif %}
+      </div>
+    </div>
+  {% endfor %}
+
+  <h3 class="mt-5">Forecasts</h3>
+  {% for f in forecast %}
+    <div class="card mb-4 shadow-sm">
+      <div class="card-body">
+        <h5>{{ f.File }}</h5>
+        {% if f.Error %}
+          <p class="text-danger">{{ f.Error }}</p>
+        {% else %}
+          <p><strong>{{ f['Price Status'] or 'N/A' }}</strong></p>
+          <p>
+            Predicted Price on {{ forecast_date }}:
+            ₹{{ f['Predicted Price on ' ~ forecast_date] if ('Predicted Price on ' ~ forecast_date) in f else 'N/A' }}
+          </p>
+          <p>7-Day Avg Before Forecast: ₹{{ f['7-Day Avg Before Forecast'] or 'N/A' }}</p>
+
+          {% if f['Price Timeline'] %}
+            <canvas id="chart-{{ loop.index }}"></canvas>
+          {% else %}
+            <p class="text-muted">No timeline data available.</p>
+          {% endif %}
+        {% endif %}
+      </div>
+    </div>
+  {% endfor %}
+</div>
+
+<script src="https://cdn.jsdelivr.net/npm/chart.js"></script>
+<script>
+  const forecasts = {{ forecast | tojson }};
+  forecasts.forEach((f, i) => {
+    const timeline = f['Price Timeline'];
+    if (!timeline || !Array.isArray(timeline) || timeline.length === 0) return;
+
+    const ctx = document.getElementById(`chart-${i + 1}`);
+    const labels = timeline.map(p => p.date);
+    const data = timeline.map(p => p.price);
+
+    new Chart(ctx, {
+      type: 'line',
+      data: {
+        labels,
+        datasets: [{
+          label: 'Predicted Price',
+          data,
+          borderColor: 'rgba(75, 192, 192, 1)',
+          borderWidth: 2,
+          fill: false,
+          tension: 0.3
+        }]
+      },
+      options: {
+        responsive: true,
+        plugins: {
+          title: {
+            display: true,
+            text: `Forecast - ${f.File}`
+          },
+          legend: {
+            display: false
+          }
+        }
+      }
+    });
+  });
+</script>
+{% endblock %}
+

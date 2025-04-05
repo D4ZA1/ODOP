@@ -1,0 +1,51 @@
+{% extends "layout.html" %}
+{% block content %}
+<div class="container py-5">
+  <div class="row justify-content-center">
+    <div class="col-md-8">
+      <div class="card shadow-lg border-0 rounded-4">
+        <div class="card-body p-4">
+          <h3 class="card-title mb-4 text-center text-primary">
+            <i class="bi bi-box-seam-fill me-2"></i>Add New Product
+          </h3>
+
+          {% if error %}
+          <div class="alert alert-danger" role="alert">{{ error }}</div>
+          {% endif %}
+          <form method="POST" action="{{ url_for('add_product') }}">
+            <div class="mb-3">
+              <label for="product_id" class="form-label">Product ID</label>
+              <input type="text" class="form-control" id="product_id" name="product_id" required>
+            </div>
+
+            <div class="mb-3">
+              <label for="name" class="form-label">Product Name</label>
+              <input type="text" class="form-control" id="name" name="name" required>
+            </div>
+
+            <div class="mb-3">
+              <label for="origin_district" class="form-label">Origin District</label>
+              <input type="text" class="form-control" id="origin_district" name="origin_district" required>
+            </div>
+
+            <div class="mb-3">
+              <label for="market" class="form-label">Market</label>
+              <input type="text" class="form-control" id="market" name="market" required>
+            </div>
+
+            <div class="d-grid gap-2 mt-4">
+              <button type="submit" class="btn btn-primary rounded-pill">
+                <i class="bi bi-plus-circle me-1"></i>Add Product
+              </button>
+              <a href="{{ url_for('index') }}" class="btn btn-outline-secondary rounded-pill">
+                <i class="bi bi-arrow-left-circle me-1"></i>Back to Home
+              </a>
+            </div>
+          </form>
+
+        </div>
+      </div>
+    </div>
+  </div>
+</div>
+{% endblock %}
